@@ -1,0 +1,60 @@
+version: '3.5'
+
+services:
+
+  java_app:
+    image: task_one:0.0.1
+    container_name: java_app
+    build:
+      context: .
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/t_sem_two
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    ports:
+      - "8080:8080"
+#    networks:
+#      - appnet
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+
+  postgres:
+    image: postgres:14-alpine3.18
+    container_name: app_db
+    environment:
+      POSTGRES_DB: 't_sem_two'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+#      PGDATA: '/var/lib/postgres/data/pgdata'
+    volumes:
+      - app_db:/var/lib/postgres/data
+    ports:
+      - "5432:5432"
+#    networks:
+#      - appnet
+    restart: unless-stopped
+#
+#  pgadmin:
+#    container_name: pgadmin_container
+#    image: dpage/pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: admin@email.com
+#      PGADMIN_DEFAULT_PASSWORD: admin
+#    volumes:
+#      - pgadmin:/var/lib/pgadmin
+#
+#    ports:
+#      - "5050:80"
+#    networks:
+#      - appnet
+#    restart: unless-stopped
+
+#networks:
+#  appnet:
+#    name: appnet
+
+volumes:
+  app_db:
+#  pgadmin:

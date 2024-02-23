@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-one-service
+spec:
+  selector:
+    app: task-one-app
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 8080
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-one-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-one-app
+  template:
+    metadata:
+      labels:
+        app: task-one-app
+    spec:
+      containers:
+        - name: task-one-app
+          image: pportu/task_one:1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://task-one-postgresdb/t_sem_two
+            - name: SPRING_DATASOURCE_USERNAME
+              value: postgres
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: postgres
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      

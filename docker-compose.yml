@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+
+  postgres:
+    image: postgres:14-alpine3.18
+    container_name: app_db
+    environment:
+      POSTGRES_DB: 't_sem_two'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+    volumes:
+      - app_db:/var/lib/postgres/data
+    ports:
+      - "15432:5432"
+    restart: unless-stopped
+
+volumes:
+  app_db:

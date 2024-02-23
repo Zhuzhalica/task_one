@@ -1,0 +1,14 @@
+type Animal {
+    id: Int!,
+    name: String,
+    breed: String
+}
+
+type Query {
+    getAnimals: [Animal!]!
+    getAnimal(id: Int!): Animal!
+}
+
+type Mutation {
+    createAnimal(name: String, breed: String): Animal
+}
