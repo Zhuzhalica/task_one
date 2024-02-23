@@ -14,10 +14,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: task-one-postgresdb-service
+  name: postgres
 spec:
   selector:
-    app: task-one-postgresdb
+    app: postgres
   ports:
     - port: 5432
       targetPort: 5432
@@ -27,26 +27,21 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: task-one-postgresdb
+  name: postgres
 spec:
   selector:
     matchLabels:
-      app: task-one-postgresdb
-  replicas: 1
+      app: postgres
   template:
     metadata:
       labels:
-        app: task-one-postgresdb
+        app: postgres
     spec:
       containers:
-        - name: task-one-postgresdb
+        - name: postgres
           image: postgres:14-alpine3.18
-          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432
-          volumeMounts:
-            - name: t-sem-two
-              mountPath: /var/lib/postgresql/data
           env:
             - name: POSTGRES_USER
               value: postgres
@@ -56,9 +51,24 @@ spec:
               value: t_sem_two
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: t-sem-two
+              mountPath: /var/lib/postgresql/data
       volumes:
         - name: t-sem-two
           persistentVolumeClaim:
             claimName: postgres-pvc
 
-  
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-one-app
+spec:
+  selector:
+    app: task-one-app
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
