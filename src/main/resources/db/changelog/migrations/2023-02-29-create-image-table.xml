@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2023-02-18-create-image-table" author="admin">
+        <createTable tableName="image">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="animal_id" type="BIGINT" />
+            <column name="link" type="VARCHAR" />
+            <column name="size" type="BIGINT" />
+            <column name="name" type="VARCHAR" />
+        </createTable>
+        <addForeignKeyConstraint baseTableName="image" baseColumnNames="animal_id"
+                                 constraintName="image_animal_fkey"
+                                 referencedTableName="animal"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+        <rollback>
+            <dropTable tableName="image"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

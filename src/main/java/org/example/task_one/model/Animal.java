@@ -1,7 +1,10 @@
-package org.example.task_one.Model;
+package org.example.task_one.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -9,7 +12,8 @@ import lombok.*;
 @NoArgsConstructor
 @Table(name = "animal")
 @Entity
-public class Animal {
+@ToString
+public class Animal implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

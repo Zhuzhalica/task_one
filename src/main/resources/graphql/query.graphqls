@@ -4,11 +4,19 @@ type Animal {
     breed: String
 }
 
+type ResponseAnimalDto{
+    id: Int,
+    name: String,
+    breed: String,
+    links: [String],
+}
+
 type Query {
     getAnimals: [Animal!]!
-    getAnimal(id: Int!): Animal!
+    getAnimal(id: Int!): ResponseAnimalDto!
 }
 
 type Mutation {
     createAnimal(name: String, breed: String): Animal
+    addAnimalImage(id: Int, imageLinks: [String]): ResponseAnimalDto
 }
