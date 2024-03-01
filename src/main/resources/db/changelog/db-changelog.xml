@@ -5,5 +5,6 @@
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <include file="db/changelog/migrations/2023-02-18-create-animal-table.xml"/>
+    <include file="db/changelog/migrations/2023-02-29-create-image-table.xml"/>
 
 </databaseChangeLog>

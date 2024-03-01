@@ -1,4 +1,4 @@
-package org.example.task_one.Dto;
+package org.example.task_one.dto;
 
 import lombok.Getter;
 import lombok.Setter;

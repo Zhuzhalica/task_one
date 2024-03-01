@@ -11,12 +11,16 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/t_sem_two
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo/logs
+      - SPRING_DATA_REDIS_HOST=redis
+      - MINIO_URL=minio
     ports:
       - "8080:8080"
-#    networks:
-#      - appnet
     depends_on:
       - postgres
+      - mongo
+      - redis
+      - minio
     restart: unless-stopped
 
 
@@ -27,34 +31,49 @@ services:
       POSTGRES_DB: 't_sem_two'
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
-#      PGDATA: '/var/lib/postgres/data/pgdata'
     volumes:
       - app_db:/var/lib/postgres/data
     ports:
       - "5432:5432"
-#    networks:
-#      - appnet
     restart: unless-stopped
-#
-#  pgadmin:
-#    container_name: pgadmin_container
-#    image: dpage/pgadmin4
-#    environment:
-#      PGADMIN_DEFAULT_EMAIL: admin@email.com
-#      PGADMIN_DEFAULT_PASSWORD: admin
-#    volumes:
-#      - pgadmin:/var/lib/pgadmin
-#
-#    ports:
-#      - "5050:80"
-#    networks:
-#      - appnet
-#    restart: unless-stopped
 
-#networks:
-#  appnet:
-#    name: appnet
+  mongo:
+    image: mongo
+    container_name: mangodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: logs
+    volumes:
+      - ./environment/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - app_mongo:/data/db
+      - app_mongo_config:/data/configdb
+
+  redis:
+    image: redis:7.2-rc-alpine
+    restart: always
+    container_name: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass 12345
+    volumes:
+      - app_redis:/data
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - ./environment/minio/data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address :9001
 
 volumes:
   app_db:
-#  pgadmin:
+  app_redis:
+  app_mongo:
+  app_mongo_config:
