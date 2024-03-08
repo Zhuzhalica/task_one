@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.task_one.model.LogRecord;
 import org.example.task_one.utils.enums.RecordType;
 import org.example.task_one.log.LogService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 @RequestMapping("/logs")
 public class LogController {
     private final LogService logService;
-
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(description = "Получить записи из логов по типу действия")
     @GetMapping("/{recordType}")
     public List<LogRecord> getLogs(@PathVariable String recordType) {
